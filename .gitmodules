@@ -1,0 +1,9 @@
+[submodule "dash_bower_modules"]
+	path = dash_bower_modules
+	url = https://github.com/sherah/dash_bower_modules.git
+[submodule "dash_node_modules"]
+	path = dash_node_modules
+	url = https://github.com/sherah/dash_node_modules.git
+[submodule "node_modules"]
+	path = node_modules
+	url = https://github.com/sherah/dash_node_modules.git
