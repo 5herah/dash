@@ -13,6 +13,9 @@ define(
         self.description = ko.observable();
         self.graphs = ko.observableArray([]);
 
+        //set up the app assuming that the user is not logged in yet.
+        self.userIsLoggedIn = ko.observable(false);
+
         var find = function(value){
             return function(e, i){
                 return value === e;

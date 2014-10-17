@@ -13,6 +13,7 @@ define(
         ko.components.register( 'app-content',        { require: 'components/app-content/app-content' });
 
         //register utils
+        ko.components.register( 'login-page',         { require: 'components/utils/login/login-page'});
         ko.components.register( 'date-pickers',       { require: 'components/utils/date-pickers/date-pickers' });
 
         //register individual widgets

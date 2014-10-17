@@ -1,5 +1,8 @@
 <div class="container">
-	<div class="row">
-		<div data-bind="component: 'fraud-gauge'" class="col-md-4"></div>
+	<div class="row" data-bind="visible: !$parent.userIsLoggedIn">
+		<login-page class="col-md-12 col-lg-5 col-sm-12" params="userIsLoggedIn: userIsLoggedIn"></login-page>
+	</div>
+	<div class="row" data-bind="visible: $parent.userIsLoggedIn">
+		<fraud-gauge class="col-md-4"></fraud-gauge>
 	</div>
 </div>
