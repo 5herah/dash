@@ -310,7 +310,7 @@ input {
     border-top: none;
 }
 
-.logoutBtn {
+.logoutBtn .btn{
     width: 100%;
 }
 
