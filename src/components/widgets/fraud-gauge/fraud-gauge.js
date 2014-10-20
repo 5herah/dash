@@ -3,6 +3,7 @@ define([
     'text!components/widgets/fraud-gauge/fraud-gauge.html',
     'gauge',
     'noUISlider',
+    'selectize',
     'bootstrap-datepicker'
     ],
 function( ko, template, datePickersTemplate, noUISlider ){
@@ -10,10 +11,34 @@ function( ko, template, datePickersTemplate, noUISlider ){
   function FraudGaugeViewModel( params ){
 
     var self = this;
+
+    $.ajaxSetup({async:false});
+
+    var widgetData = $.get( 'metadata/fraud', function(reqData){
+      self.data = reqData;
+    });
+
     self.title = 'Fraud Rejections';
     self.selectedTimePeriod = ko.observable();
-    self.chosenFilters = ko.observableArray([]);
+    self.selectedFilters = ko.observableArray([]);
+    self.selectedSubFilters = ko.observableArray([]);
+    self.queryRequest = [];
+    self.gaugeValue = ko.observable(3);
+    self.filtersSelected = ko.observable(false);
+    self.gaugeIsSetUp = ko.observable(false);
+    self.queryString = ko.observable('This widget hasn\'t been set up yet!');
 
+    //broken down data from above
+    self.filters = ko.observableArray($.map(self.data.filters, function(val, i){return[val]}));
+    self.filterNames = ko.computed( function(){
+      var names = [];
+      $.each(self.filters(), function(el, i){
+        names.push(i.display);
+      });
+      return names;
+    });
+
+    //default range slider settings
     self.lowRange = ko.observable(33);
     self.highRange = ko.observable(66);
     $('#fraudPercentSlider').noUiSlider({
@@ -33,38 +58,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
       },
     });
 
-    self.getFilters = ko.computed( function(){
-      //TODO: make this happen via database (hardcode for now)
-      //TODO: check to see if db has changed then fetch
-
-      var filterNamesFromDB = ['Currency','Method','Source','Campaign','Medium','Referrer','Gateway','Fraud Score'],
-      subfilterNamesFromDB  = [
-                              [ 'USD', 'AUD', 'ESB', 'ABC', 'DEF' ],
-                              [ 'Credit Card', 'Bank Transfer', 'Check' ],
-                              [ 'Source 1', 'Source 2' ],
-                              [ 'Big English', 'Another Campaign' ],
-                              [ 'Medium 1', 'Medium 2', 'Medium 3' ],
-                              [ 'Banner', 'Donate', 'Adam' ],
-                              [ 'Global Collect', 'WorldPay', 'Another Gateway' ],
-                              [ '0-100', '100-150', '150-200', '200+', 'or whatever' ] ];
-
-      filters = [];
-
-      for(var i=0; i<filterNamesFromDB.length; i++){
-        var filterObj = {filterName: filterNamesFromDB[i]};
-        filters.push(filterObj);
-      }
-
-      for(var j=0; j<subfilterNamesFromDB.length; j++){
-        for(var filter in filters){
-          filters[j].subfilter = subfilterNamesFromDB[j];
-        }
-      }
-
-      self.filters = ko.observableArray(filters);
-
-    });
-
     //Gauge options
     self.opts = {
       lines: 12,
@@ -79,22 +72,12 @@ function( ko, template, datePickersTemplate, noUISlider ){
       generateGradient: true
     };
 
-    self.hasMadeSelection = ko.observable(false);
-
-    //TODO: connect with database
-    self.getFraudFailurePercent = function(){
-      //TODO: run query and get the real percentage ;p
-      //for now make it easy to visualize for testing
-      var randomishVals = [2222, 5555, 8888];
-      var numberOfFails = randomishVals[parseInt(Math.random() * 3)],
-          numberOfTransactions = 10000;
-      var value = (numberOfFails/numberOfTransactions) * 100;
-      self.value = ko.observable(parseInt(value) + "%");
+    self.getFraudFailurePercent = function(lowHi, midHi){
       //get color thresholds
       //TODO: these vals to come from user's choices via slider.
-      if(value < 33){
+      if(self.gaugeValue() < lowHi){
         self.opts.colorStop = '#89CC23';
-      } else if(value >= 33 && value < 66){
+      } else if(self.gaugeValue() >= lowHi && self.gaugeValue() < midHi){
         self.opts.colorStop = '#FFA722';
       } else {
         self.opts.colorStop = '#c12e2a';
@@ -102,17 +85,10 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
       self.gauge.setOptions(self.opts);
 
-      return value;
+      return self.gaugeValue();
     };
 
-    // self.setSubfilter = function(subfilter){
-    //   self.filterChecked = ko.observable(subfilter);
-    // };
-
-    self.filterChecked = ko.observable();
-
     //#FraudRiskScoreGauge
-    //TODO: cleanup
     self.context = document.getElementById('FraudRiskScoreGauge');
     self.gauge = new Gauge(self.context).setOptions(self.opts);
     self.gauge.maxValue = 100;
@@ -120,31 +96,125 @@ function( ko, template, datePickersTemplate, noUISlider ){
     self.gauge.set(self.getFraudFailurePercent());
     ///////////////////
 
-    self.getSQL = function(){
-      //get SQL query into popover (fake SQL for now)
+    self.validateSubmission = function( times, filters ){
 
-      self.selfQuery = "SELECT SUM(total_amount) FROM civicrm_contribution WHERE receive_date BETWEEN '20130701' AND '20140701';";
+      var validation = {
+         validated: '',
+         errors: []
+       };
 
-      $('#sqlModal .modal-body').html(self.selfQuery);
+      //there must be a chosen timeframe
+       if(!times){
+         validation.errors.push('You must submit a valid time.')
+        validation.validated = false;
+       } else {
+         validation.validated = true;
+      }
 
+      return validation;
+    };
+
+    self.convertToQuery = function( userChoices ){
+
+      var qs            = '',
+          ds            = '',
+          timePresets   = [ "Last 15 Minutes",
+                            "Last Hour",
+                            "Last 24 Hours",
+                            "Last 5 Minutes"];
+
+      $.each( self.selectedSubFilters(), function(i, el){
+        //add the filters' parent filter
+        if(i===0){
+          qs += el;
+        } else {
+          qs += ' and ' + el;
+        }
+      });
+
+      //convert time constraints
+      var currentDate = new Date();
+      switch( userChoices.timespan[0] ){
+        case timePresets[0]:
+          var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
+          ds += 'DT gt \'' + lfm.toISOString() + '\'';
+          break;
+        case timePresets[1]:
+          var lh = new Date(currentDate.getTime() - (60 * 60 * 1000));
+          ds += 'DT gt \'' + lh.toISOString() + '\'';
+          break;
+        case timePresets[2]:
+          var ltfh = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
+          ds += 'DT gt \'' + ltfh.toISOString() + '\'';
+          break;
+        case timePresets[3]:
+          var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
+          ds += 'DT gt \'' + lfvm.toISOString() + '\'';
+          break;
+        default:
+          var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
+          ds += 'DT gt \'' + lfm.toISOString() + '\'';
+          break;
+
+      }
+
+      //if there's already something in the qs, precede new string with 'and'
+      var postQS = '';
+      if(qs.length > 0){
+        postQS = qs + ' and ' + ds;
+      } else {
+        postQS = ds;
+      }
+
+      self.queryString(postQS);
+      console.log('query string: ', self.queryString());
+
+      return postQS;
+    };
+
+    self.showSubfilters = function(stuff){
+      $('#'+stuff).toggleClass('hide');
     };
 
     self.submitGaugeModifications = function(){
-      //TODO: get all values from the form into the SQL query
-      //run that query and generate the new widget
 
-      //gauge boundaries
-      var l = $('#fraudPercentSlider').slider( "values", 0),
-          h = $('#fraudPercentSlider').slider( "values", 1);
+      //validate values first.
+      var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
+      if( !validation.validated ){
+        console.log(validation);
 
-      //gauge time period
+        $('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission:</p><ul></ul>' ).addClass('show');
+        $.each( validation.errors, function(el, i){
+          $('#fraudSubmissionErrors ul').append('<li>' + i + '</li>');
+        });
 
+      } else{
 
-      //gauge filters
+        //gauge time period
+        self.queryRequest['timespan'] = self.selectedTimePeriod();
 
+        //gauge filters
+        self.queryRequest['selectedFilters'] = self.selectedFilters();
+        self.filtersSelected(true);
+
+        //gauge subfilters
+        self.selectedSubFilters();
+
+        //put it all into a real query
+        //this will be a function call - TODO: make parsing function
+        self.queryString( self.convertToQuery(self.queryRequest));
+
+        $.get( '/data/fraud?' + $.param({ '$filter': self.queryString() }).replace(
+          /\+/g, '%20' ), function ( dataget ) {
+          self.gaugeIsSetUp(true);
+          self.gaugeValue( parseFloat(dataget[0].fraud_percent).toFixed(2) );
+          self.gauge.set(self.getFraudFailurePercent(parseInt($('#fraudPercentSlider').val()[0]), parseInt($('#fraudPercentSlider').val()[1])));
+        } );
+      };
 
 
     };
+
 
   }
 

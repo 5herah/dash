@@ -184,9 +184,9 @@ body {
 
 /* Gauges */
 
-#fraudGaugeWidget {
+/*#fraudGaugeWidget {
     width: 330px;
-}
+}*/
 
 #fraudGaugeWidget .panel-body {
     padding: 0;
@@ -214,6 +214,28 @@ body {
     cursor: pointer;
 }
 
+ul.filterPickerList {
+    list-style-type: none;
+}
+
+#filterNav > li > input, .subfilterSubnav > li > input{
+    vertical-align: middle;
+    margin-right:3px;
+}
+
+#filterNav > li {
+    width: 23%;
+    padding:10px 0 0 5px;
+}
+
+#filterNav.nav-tabs {
+    border: none;
+}
+
+.subfilterSubnav {
+    margin-left: -20px;
+}
+
 #customTimePicker {
     width: 100px;
 }
@@ -233,6 +255,14 @@ body {
 
 #customTimepickerRange {
     margin-left: 7px;
+}
+
+#fraudSubmissionErrors {
+    text-align: left;
+}
+
+#unspecifiedFraudGauge.row{
+    margin: 10px;
 }
 
 /* BOOTSTRAP OVERRIDES */

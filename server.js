@@ -71,7 +71,6 @@ app.get( '/auth/drupal/callback',
 		res.redirect( '/' );
 	});
 
-
 server = app.listen(
 		serverConfig[3],
 		serverConfig[2],
