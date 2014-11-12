@@ -72,7 +72,7 @@ app.get( '/data/:widget', routes.data );
 app.get( '/metadata/:widget', routes.metadata );
 app.get( '/user/info', routes.user );
 
-app.use( express.static(__dirname + '/dist' ) );
+app.use( express.static(__dirname + '/src' ) );
 
 app.get( '/auth/drupal', passport.authenticate( 'drupal' ));
 app.get( '/auth/drupal/callback',

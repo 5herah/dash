@@ -153,7 +153,7 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
         } else {
           qs += filterObj[el];
         }
-        qs += ' and ';
+        //qs += ' and ';
       });
 
       //convert time constraints
@@ -190,11 +190,18 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
         postQS = ds;
       }
 
-      return postQS;
+      return qs;
     };
 
     self.showSubfilters = function(stuff){
       $('#'+stuff).toggleClass('hide');
+    };
+
+    self.resetGaugeSettings = function(){
+      self.greenRange({low: 0, high: 33});
+      self.yellowRange({low: 33, high: 66});
+      self.redRange({low: 66, high: 100});
+      $('#timePeriodSelection').reset();
     };
 
     self.submitGaugeModifications = function(){
@@ -254,7 +261,7 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
               color: {
                   pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
                   threshold: {
-                      values: [ 0, self.lowRange(), self.highRange(), 100]
+                      values: [ 0, self.greenRange().high, self.yellowRange().high, 100]
                   }
               }
           });
