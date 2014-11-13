@@ -40,7 +40,7 @@
                             </div>
                             <div class="modal-body">
 
-                                    <form role="form">
+                                    <form role="form" class="fraudForm">
                                         <div class="form-group">
                                             <div class="well">
                                                 <label for="fraudPercentSlider">Fraud Percent Ranges</label>
@@ -50,7 +50,7 @@
                                                     <div class="col-md-4 col-sm-4 col-lg-4">
                                                         <label>low fraud score: up to</label>
                                                         <div class="input-group">
-                                                          <input type="text" class="form-control" data-bind="textInput: yellowRange().low">
+                                                          <input type="text" class="form-control" data-bind="textInput: greenHighRange()">
                                                           <span class="input-group-btn">
                                                             <button class="btn btn-success percentBtn" type="button"><i class="fa fa-refresh"></i></button>
                                                           </span>
@@ -60,14 +60,14 @@
                                                         <label>mid-level score:</label>
                                                         <div class="input-group">
                                                           <span class="input-group-btn">
-                                                            <button class="btn btn-warning percentBtn" type="button"><span data-bind="text:yellowRange().low + '% to ' + yellowRange().high + '%'"></button>
+                                                            <button class="btn btn-warning percentBtn" type="button"><span data-bind="text:greenHighRange() + '% to ' + redLowRange() + '%'"></button>
                                                           </span>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 col-sm-4 col-lg-4">
                                                         <label>high fraud score: from</label>
                                                         <div class="input-group">
-                                                        <input type="text" class="form-control" data-bind="textInput: yellowRange().high">
+                                                        <input type="text" class="form-control" data-bind="textInput: redLowRange()">
                                                           <span class="input-group-btn">
                                                             <button class="btn btn-danger percentBtn" type="button"><i class="fa fa-refresh"></i></button>
                                                           </span>
