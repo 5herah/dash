@@ -47,7 +47,8 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
     self.gaugeValue = ko.observable(0);
     self.filtersSelected = ko.observable(false);
     self.gaugeIsSetUp = ko.observable(false);
-    self.queryString = ko.observable('This widget hasn\'t been set up yet!');
+    self.queryString = ko.observable('');
+    self.queryStringSQL = ko.observable('This widget hasn\'t been set up yet!');
 
     //broken down data from above
     self.filters = ko.observableArray($.map(self.data.filters, function(val, i){return[val]}));
@@ -263,7 +264,8 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
         $.get( '/data/fraud?' + $.param({ '$filter': self.queryString() }).replace(
           /\+/g, '%20' ), function ( dataget ) {
           self.gaugeIsSetUp(true);
-          self.gaugeValue(parseFloat(dataget[0].fraud_percent).toFixed(2) );
+          self.gaugeValue(parseFloat(dataget[0][0].fraud_percent).toFixed(2) );
+          self.queryStringSQL(dataget[1]);
 
           self.gauge = c3.generate({
               bindto: '#FraudRiskScoreGauge',
@@ -288,7 +290,7 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
               color: {
                   pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
                   threshold: {
-                      values: [ 0, self.greenHighRange, self.yellowRange().high, 100]
+                      values: [ 0, self.greenHighRange, self.redLowRange, 100]
                   }
               }
           });
