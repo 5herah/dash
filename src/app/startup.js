@@ -14,9 +14,9 @@ define(
 
         //register utils
         ko.components.register( 'date-pickers',       { require: 'components/utils/date-pickers/date-pickers' });
+        ko.components.register( 'thermometer',        { require: 'components/utils/thermometer/thermometer' });
 
         //register individual widgets
-
         ko.components.register( 'big-english',        { require: 'components/widgets/big-english/big-english' });
         ko.components.register( 'fraud-gauge',        { require: 'components/widgets/fraud-gauge/fraud-gauge' });
 

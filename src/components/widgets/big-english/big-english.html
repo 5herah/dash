@@ -1,25 +1,132 @@
-
-<div class="panel panel-purple" id="bigEnglishWidget">
-	<div class="panel-heading">
-		<h2>Big English Monitoring</h2>
+<div class="row">
+	<div class="col-md-4 titleCol">
+		<h2 style="display:inline">Big English Monitoring</h2>
+		<p data-bind="text: getTodaysDate"></p>
 	</div>
-
-	<div class="panel-body">
-
-		<!--Main updates: Goal, Total so far, Remaining to raise-->
-
-
-
-		<!--Time Remaining To Go/Money Needed To Go (second, hour, day)-->
-
-
-
-		<!--Daily, Hourly, etc Totals Earned-->
-		<div class="row-fluid">
-			<h3>Donation Amounts by Day in December</h3>
-			<canvas id="totalsEarnedChart" width="1000" height="450"></canvas>
-		</div>
-
-
+	<div class="col-md-8 titleCol">
+		<div class="btn-group btn-group-xs pull-right">
+	        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#bigEsqlModal"><i class="fa fa-database"></i></button>
+	        <button type="button" class="btn btn-default" data-bind="click: reloadBigEnglish"><i class="fa fa-refresh"></i></button>
+	    </div>
 	</div>
 </div>
+
+<div class="row">
+	<div class="panel panel-transparent">
+		<div class="panel-body">
+			<!--Main updates: Goal, Total so far, Remaining to raise-->
+			<div class="row-fluid bigEnglish-updates">
+				<div class="col-md-4 col-sm-4 col-lg-4">
+					<div class="row factbox factbox-blue">
+						<div class="col-md-3">
+							<div class="factbox-icon">
+								<i class='fa fa-soccer-ball-o'></i>
+							</div>
+						</div>
+						<div class="col-md-9">
+							<p class='factbox-header'>2014 Big English Goal</p>
+							<h3 data-bind="text: bigEnglishGoal"></h3>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-4 col-lg-4">
+					<div class="row factbox factbox-yellow">
+						<div class="col-md-3">
+							<div class="factbox-icon">
+								<i class='fa fa-gift'></i>
+							</div>
+						</div>
+						<div class="col-md-9">
+							<p class='factbox-header'>Total To Date</p>
+							<h3 data-bind="text: totalRaisedToDate"></h3>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-4 col-lg-4">
+					<div class="row factbox factbox-red">
+						<div class="col-md-3">
+							<div class="factbox-icon">
+								<i class='fa fa-calculator'></i>
+							</div>
+						</div>
+						<div class="col-md-9">
+							<p class='factbox-header'>Remaining To Raise</p>
+							<h3 data-bind="text: totalRemainingToDate"></h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="panel panel-purple">
+		<div class="panel-heading">
+			<p>Donation Amounts by Day in December</p>
+		</div>
+		<div class="panel-body">
+			<!--Daily, Hourly, etc Totals Earned-->
+			<div class="row-fluid">
+				<div id="totalsEarnedChart"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6 layoutRow">
+		<div class="panel panel-purple">
+			<div class="panel-heading">
+				<p>Distance To Goal</p>
+			</div>
+			<div class="panel-body">
+				<div class="row-fluid">
+					<div class="col-md-12">
+						<div id="distanceToGoalChart" width='1000' height='450'></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--Thermometer-->
+	<!-- <div class="col-md-3 layoutRow">
+		<thermometer params="raised: updateData.raised, goal: updateData.goal"></thermometer>
+	</div> -->
+
+	<div class="col-md-6 layoutRow">
+		<div class="panel panel-purple">
+			<div class="panel-heading">
+				<p>USD/Second Required (Average)</p>
+			</div>
+			<div class="panel-body">
+				<div class="col-md-12">
+					<div id="avgUSDperSecond"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row layoutRow">
+	<div data-bind="component: 'fraud-gauge'" class="col-md-4 layoutRow"></div>
+</div>
+
+		<!--SQL Modal-->
+		<div class="modal fade" id="bigEsqlModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Big English SQL:</h4>
+                    </div>
+                    <div class="modal-body">
+                    	<h4>SQL</h4>
+                    	<p>[sql goes here]</p>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
