@@ -22,27 +22,42 @@ define( [
         self.chosenTimePeriodDate = ko.observable('');
         self.chosenTimePeriodFromTime = ko.observable('');
         self.chosenTimePeriodToTime = ko.observable('');
+<<<<<<< HEAD
+=======
+        self.selectedTimePeriod = params.selectedTimePeriod;
+>>>>>>> release-2
 
         //TODO: handle resetting fields
         self.chosenTimePeriod = ko.pureComputed( function (){
             var timePeriod;
 
             if (self.dateBeginRange() && self.dateEndRange()){
+<<<<<<< HEAD
                 timePeriod = "from " + self.dateBeginRange() + " to " + self.dateEndRange();
             } else if(self.chosenTimePeriodPresetDate()){
                 timePeriod = self.chosenTimePeriodPresetDate();
             } else if(self.chosenTimePeriodDate() && self.chosenTimePeriodFromTime() && self.chosenTimePeriodToTime()) {
                 timePeriod = self.chosenTimePeriodDate() + " from " + self.chosenTimePeriodFromTime() + " to " + self.chosenTimePeriodToTime();
+=======
+                timePeriod = 'from ' + self.dateBeginRange() + ' to ' + self.dateEndRange();
+            } else if(self.chosenTimePeriodPresetDate()){
+                timePeriod = self.chosenTimePeriodPresetDate();
+            } else if(self.chosenTimePeriodDate() && self.chosenTimePeriodFromTime() && self.chosenTimePeriodToTime()) {
+                timePeriod = self.chosenTimePeriodDate() + ' from ' + self.chosenTimePeriodFromTime() + ' to ' + self.chosenTimePeriodToTime();
+>>>>>>> release-2
             }
 
             return timePeriod;
 
         });
 
+<<<<<<< HEAD
         self.chosenTimePeriod.subscribe( function(newVal){
             params.selectedTimePeriod(newVal);
         });
 
+=======
+>>>>>>> release-2
         self.submitTimePeriod = function(){
             console.log('the time period was submitted');
         };
@@ -56,7 +71,10 @@ define( [
         });
 
         self.availableTimePresets = ko.observableArray([
+<<<<<<< HEAD
                     'Select:',
+=======
+>>>>>>> release-2
                     'Last 15 Minutes',
                     'Last Hour',
                     'Last 24 Hours',
@@ -64,7 +82,10 @@ define( [
         ]);
 
         self.availableIncrementTypes = ko.observableArray([
+<<<<<<< HEAD
                     'Select:',
+=======
+>>>>>>> release-2
                     'Hour...',
                     'Day...',
                     'Week...',

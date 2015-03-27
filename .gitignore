@@ -5,6 +5,11 @@ node_modules/*
 defaults.js
 src/app/models.txt
 nbproject
+<<<<<<< HEAD
 dist/
 *swp
 
+=======
+*swp
+dist
+>>>>>>> release-2

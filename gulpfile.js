@@ -3,8 +3,12 @@
 var fs          = require('fs'),
     vm          = require('vm'),
     merge       = require('deeply'),
+<<<<<<< HEAD
     chalk       = require('chalk'),
     es          = require('event-stream');
+=======
+    chalk       = require('chalk');
+>>>>>>> release-2
 
 // Gulp and plugins
 var gulp                    = require('gulp'),
@@ -35,18 +39,36 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
             'components/app-content/app-content',
             'components/utils/date-pickers/date-pickers',
             'components/widgets/fraud-gauge/fraud-gauge',
+<<<<<<< HEAD
+=======
+            'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
+            'components/widgets/totals-earned-chart/totals-earned-chart',
+            'components/widgets/amt-per-second-chart/amt-per-second-chart',
+            'components/boards/bigEnglish/bigEnglishBoard',
+            'components/boards/generic-board/generic-board',
+            'components/widgets/x-by-y/x-by-y',
+            'components/widgets/cat-trombone/cat-trombone'
+>>>>>>> release-2
         ],
         insertRequire: ['app/startup'],
         bundles: {
             // If you want parts of the site to load on demand, remove them from the 'include' list
             // above, and group them into bundles here.
+<<<<<<< HEAD
             'date-pickers': ['components/utils/date-pickers/date-pickers'],
+=======
+            'date-pickers': ['components/utils/date-pickers/date-pickers']
+>>>>>>> release-2
             // 'vega-timeseries': ['components/visualizers/vega-timeseries/vega-timeseries']
 
         }
     });
 
+<<<<<<< HEAD
 var jsfilesToLint = ['src/app/*.js', 'src/components/*/*.js'];
+=======
+var jsfilesToLint = ['**/*.js', '!node_modules/**/*.js', '!src/bower_modules/**/*.js'];
+>>>>>>> release-2
 
 // linting
 gulp.task('lint', function () {
@@ -56,7 +78,11 @@ gulp.task('lint', function () {
 });
 
 // Discovers all AMD dependencies, concatenates together all required .js files, minifies them
+<<<<<<< HEAD
 gulp.task('js', function () {
+=======
+gulp.task('js', ['clean'], function () {
+>>>>>>> release-2
     return rjs(requireJsOptimizerConfig)
         .pipe(uglify({
             preserveComments: 'some'
@@ -68,10 +94,20 @@ gulp.task('js', function () {
         .pipe(gulp.dest('./dist/'));
 });
 
+<<<<<<< HEAD
 gulp.task('css', function () {
     return gulp.src(['src/bower_modules/bootstrap/dist/css/bootstrap.css',
                     'src/bower_modules/nouislider/src/jquery.nouislider.css',
                     'src/bower_modules/fontawesome/css/font-awesome.css',
+=======
+gulp.task('css', ['clean'], function () {
+    return gulp.src(['src/bower_modules/bootstrap/dist/css/bootstrap.css',
+                    'src/bower_modules/nouislider/src/jquery.nouislider.css',
+                    'src/bower_modules/fontawesome/css/font-awesome.css',
+                    'src/bower_modules/lato/css/lato.css',
+                    'src/bower_modules/c3/c3.css',
+                    'src/bower_modules/select2/select2.css',
+>>>>>>> release-2
                     'src/css/*.css'])
         .pipe(concat('style.css')).pipe(rev()).pipe(gulp.dest('./dist/'))
         // Add rev-manifest.json as a new src to prevent rev'ing rev-manifest.json
@@ -81,10 +117,20 @@ gulp.task('css', function () {
 });
 
 /** Copies semantic fonts where the css expects them to be**/
+<<<<<<< HEAD
 gulp.task('fonts', function () {
     return gulp.src(['src/bower_modules/fontawesome/fonts/*{ttf,woff,eot,svg,otf}',
                      'src/bower_modules/lato/font/*{ttf,woff,eot,svg}'])
         .pipe(gulp.dest('./fonts/'));
+=======
+gulp.task('font', ['clean'], function () {
+    return gulp.src(['src/bower_modules/lato/font/*{ttf,woff,eot,svg}'])
+        .pipe(gulp.dest('./dist/font/'));
+});
+gulp.task('fonts', ['clean'], function () {
+    return gulp.src(['src/bower_modules/fontawesome/fonts/*{ttf,woff,eot,svg,otf}'])
+        .pipe(gulp.dest('./dist/fonts/'));
+>>>>>>> release-2
 });
 
 // Copies index.html, replacing <script> and <link> tags to reference production URLs
@@ -106,7 +152,11 @@ gulp.task('replace', ['css', 'js'], function () {
     bundles.forEach(function (element, index, array) {
         var l = element.length;
         // we are trying to match  "project-selector" (quotes-included)
+<<<<<<< HEAD
         regex = regex + '\"(' + element.substr(0, element.length - 3) + ')\"\:|';
+=======
+        regex = regex + '\"(' + element.substr(0, l - 3) + ')\":|';
+>>>>>>> release-2
 
     });
 
@@ -118,14 +168,22 @@ gulp.task('replace', ['css', 'js'], function () {
         // remove quotes from match and add ".js"
         // so we can key on the manifest with versions
         match = match.substring(1, match.length - 2);
+<<<<<<< HEAD
         match = match + ".js";
+=======
+        match = match + '.js';
+>>>>>>> release-2
         var version = jsManifest[match];
 
         version = '\"' + version + '\":';
         return version;
     }
 
+<<<<<<< HEAD
     var regexObj = new RegExp(regex, "g");
+=======
+    var regexObj = new RegExp(regex, 'g');
+>>>>>>> release-2
 
     gulp.src(['./dist/' + jsManifest['scripts.js']])
         .pipe(replace(regexObj, replaceByVersion))
@@ -149,15 +207,33 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
+<<<<<<< HEAD
 gulp.task('default', ['clean', 'replace', 'lint', 'fonts'], function (callback) {
     callback();
     console.log('\nPlaced optimized files in ' + chalk.magenta('dist/\n'));
     console.log('\nPlaced font files in ' + chalk.magenta('fonts/\n'));
+=======
+gulp.task('images', function() {
+    return gulp.src('./src/images/**/*')
+           .pipe(gulp.dest('./dist/images/'));
+});
+
+gulp.task('default', ['clean', 'replace', 'lint', 'font', 'fonts', 'images'], function (callback) {
+    callback();
+    console.log('\nPlaced optimized files in ' + chalk.magenta('dist/\n'));
+    console.log('\nPlaced font files in ' + chalk.magenta('font/\n'));
+
+    console.log('\nWatching changes... You\'re free to kill off this task now.');
+>>>>>>> release-2
 });
 
 function logWatcher(event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
 }
 gulp.watch('./src/**/*.js', ['js']).on('change', logWatcher);
+<<<<<<< HEAD
 gulp.watch('./src/**/*.html', ['html']).on('change', logWatcher);
+=======
+gulp.watch('./src/**/*.html', ['replace']).on('change', logWatcher);
+>>>>>>> release-2
 gulp.watch('./src/**/*.css', ['css']).on('change', logWatcher);

@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 var require = {
     baseUrl: ".",
+=======
+/* jshint -W098 */
+
+var require = {
+    baseUrl: '.',
+>>>>>>> release-2
     paths: {
         'bootstrap':            'bower_modules/bootstrap/dist/js/bootstrap',
         'crossroads':           'bower_modules/crossroads/dist/crossroads.min',
@@ -19,7 +26,15 @@ var require = {
         'bootstrap-timepicker': 'bower_modules/bootstrap-timepicker/js/bootstrap-timepicker',
         'sifter':               'bower_modules/sifter/sifter',
         'microplugin':          'bower_modules/microplugin/src/microplugin',
+<<<<<<< HEAD
         'selectize':            'bower_modules/selectize/dist/js/selectize'
+=======
+        'select2':              'bower_modules/select2//select2',
+        'c3':                   'bower_modules/c3/c3',
+        'numeraljs':            'bower_modules/numeraljs/numeral',
+        'decemberData':         'bower_modules/fakeData/decemberData',
+        'WidgetBase':           'app/widgetBase'
+>>>>>>> release-2
     },
     shim: {
         'bootstrap': {
@@ -27,6 +42,14 @@ var require = {
                 'jquery'
             ]
         },
+<<<<<<< HEAD
+=======
+        'c3': {
+            deps: [
+                'd3'
+            ]
+        },
+>>>>>>> release-2
         'momentjs': {
             exports: 'moment'
         },

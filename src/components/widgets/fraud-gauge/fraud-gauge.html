@@ -1,14 +1,27 @@
+<<<<<<< HEAD
 <div class="panel panel-purple" id="fraudGaugeWidget">
     <div class="panel-heading">
         Fraud Rejections
         <div class="btn-group btn-group-xs pull-right">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#sqlModal"><i class="fa fa-database"></i></button>
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modifyModal"><i class="fa fa-edit"></i></button>
+=======
+<div id="fraudGaugeWidget" class="panel panel-purple widget-6">
+    <div class="panel-heading">
+        <span data-bind='text: title'></span>
+        <div class="btn-group btn-group-xs pull-right">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#sqlModal"><i class="fa fa-database"></i></button>
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modifyModal" data-bind="click: renderPercentRangeChart"><i class="fa fa-edit"></i></button>
+            <button type="button" class="btn btn-danger" data-bind="visible: !chartSaved() && optionStateChanged, click: saveWidgetConfig"><i class="fa fa-save"></i></button>
+            <button type="button" class="btn btn-success" data-bind="visible: chartSaved && !optionStateChanged()"><i class="fa fa-save"></i> Saved</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
+>>>>>>> release-2
         </div>
     </div>
     <div class="panel-body">
 
         <div class="row">
+<<<<<<< HEAD
             <div class="col-md-12 gauge">
 
                 <div class="row">
@@ -28,6 +41,28 @@
                 </div>
 
                 <div class="row" id="fraudGaugeMeta" data-bind="visible: gaugeIsSetUp()">
+=======
+            <div class="gauge">
+
+                <div class="row">
+                    <h3 class="text-center" data-bind="visible: configSet, text: selectedTimePeriod"></h3>
+                </div>
+
+                <div class="row" id="specifiedFraudGauge" data-bind="if: configSet">
+                    <div id="FraudRiskScoreGauge" data-bind='c3: gauge'></div>
+                </div>
+
+                <div class="row" id="unspecifiedFraudGauge" data-bind="if: !configSet()">
+                    <div class="col-md-12">
+                        <div class="setupAsk">
+                            <h3>This widget hasn't been set up yet.</h3>
+                            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modifyModal" data-bind="click: renderPercentRangeChart">Set it up</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="fraudGaugeMeta" data-bind="visible: configSet">
+>>>>>>> release-2
                     <p class="text-center"><span data-bind="visible: filtersSelected()">By: </span><span class="label label-info" data-bind="text: selectedFilters"></span></p>
                 </div>
 
@@ -40,6 +75,7 @@
                             </div>
                             <div class="modal-body">
 
+<<<<<<< HEAD
                                     <form role="form">
                                         <div class="form-group">
                                             <label for="fraudPercentSlider">Fraud Percent Ranges</label>
@@ -52,6 +88,43 @@
                                                   <td data-bind="attr: { width: ( 100 - highRange()) + '%' }"><span data-bind="text: highRange"></span> - 100%</td>
                                               </tr>
                                             </table>
+=======
+                                    <form role="form" class="fraudForm">
+                                        <div class="form-group">
+                                            <div class="well">
+                                                <label for="fraudPercentRanges">Fraud Percent Ranges</label>
+                                                <p>set up the colors as they'll appear in the gauge.</p>
+                                                <canvas id="fraudPercentRanges" width="200" height="120"></canvas>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-4 col-lg-4">
+                                                        <label>low fraud score: up to</label>
+                                                        <div class="input-group">
+                                                          <input type="text" class="form-control" data-bind="textInput: greenHighRange, event: { mouseout: renderPercentRangeChart }">
+                                                          <span class="input-group-btn">
+                                                            <button class="btn btn-success percentBtn" type="button"><i class="fa fa-refresh"></i></button>
+                                                          </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4 col-lg-4">
+                                                        <label>mid-level score:</label>
+                                                        <div class="input-group">
+                                                          <span class="input-group-btn">
+                                                            <button class="btn btn-warning percentBtn" type="button"><span data-bind="text:greenHighRange() + '% to ' + redLowRange() + '%'"></button>
+                                                          </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4 col-lg-4">
+                                                        <label>high fraud score: from</label>
+                                                        <div class="input-group">
+                                                        <input type="text" class="form-control" data-bind="textInput: redLowRange, event: { mouseout: renderPercentRangeChart }">
+                                                          <span class="input-group-btn">
+                                                            <button class="btn btn-danger percentBtn" type="button"><i class="fa fa-refresh"></i></button>
+                                                          </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+>>>>>>> release-2
                                         </div>
 
                                         <!--Call Date Pickers Component to handle date range-->
@@ -79,7 +152,11 @@
                                     <p class="text-danger .errors"></p>
                                 </div>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+<<<<<<< HEAD
                                     <button type="button" class="btn btn-success" data-dismiss="modal" data-bind="click: submitGaugeModifications">Submit</button>
+=======
+                                    <button type="button" class="btn btn-success" data-dismiss="modal" data-bind="click: submitGaugeModifications.bind(true)">Submit</button>
+>>>>>>> release-2
                             </div>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
@@ -92,7 +169,11 @@
                                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                 <h4 class="modal-title">Fraud Gauge SQL:</h4>
                             </div>
+<<<<<<< HEAD
                             <div class="modal-body" data-bind="text: queryString"></div>
+=======
+                            <div class="modal-body" data-bind="text: queryStringSQL"></div>
+>>>>>>> release-2
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
@@ -101,5 +182,24 @@
         </div>
     </div>
 
+<<<<<<< HEAD
 
 </div>
+=======
+</div>
+
+
+<div class="modal fade" data-bind="attr: { id: 'remove'+instanceID } ">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Remove this widget from the board?</h2>
+            </div>
+            <div class="modal-body">
+                <button class="btn btn-lg btn-success pull-right" data-dismiss="modal" data-bind="click: $parents[2].removeWidgetFromBoard"> OK</button>
+                <button class="btn btn-lg btn-danger pull-right" data-dismiss="modal"> Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+>>>>>>> release-2
